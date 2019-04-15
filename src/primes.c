@@ -9,7 +9,10 @@
 
 int main()
 {
-	int limit = 33333333;
+  uintptr_t cycles1,cycles2;
+  asm volatile ("rdcycle %0" : "=r" (cycles1));
+
+  int limit = 33333333;
 	size_t primes_size = ((limit >> 6) + 1) * sizeof(uint64_t);
 	uint64_t *primes = (uint64_t*)malloc(primes_size);
 	int64_t p = 2, sqrt_limit = (int64_t)sqrt(limit);
@@ -20,7 +23,12 @@ int main()
 	for (int i = limit; i > 0; i--) {
 		if (is_prime(i)) {
 			printf("%d\n", i);
+        asm volatile ("rdcycle %0" : "=r" (cycles2));
+        printf("iruntime %lu\r\n",cycles2-cycles1);
+
 			return 0;
 		}
 	}
+
+
 };

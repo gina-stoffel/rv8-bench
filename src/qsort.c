@@ -102,7 +102,7 @@ loop:	SWAPINIT(long, a, es);
 	swap_cnt = 0;
 	if (n < 7) {
 		for (pm = (char *)a + es; pm < (char *)a + n * es; pm += es)
-			for (pl = pm; 
+			for (pl = pm;
 			     pl > (char *)a && cmp(pl - es, pl) > 0;
 			     pl -= es)
 				swap(pl, pl - es);
@@ -150,7 +150,7 @@ loop:	SWAPINIT(long, a, es);
 	}
 	if (swap_cnt == 0) {  /* Switch to insertion sort */
 		for (pm = (char *)a + es; pm < (char *)a + n * es; pm += es)
-			for (pl = pm; 
+			for (pl = pm;
 			     pl > (char *)a && cmp(pl - es, pl) > 0;
 			     pl -= es)
 				swap(pl, pl - es);
@@ -179,12 +179,15 @@ int compare (const void *a, const void *b)
 {
     const int *ia = (const int *)a;
     const int *ib = (const int *)b;
-    return *ia  - *ib; 
+    return *ia  - *ib;
 }
 
 int main()
 {
-	int *arr = malloc(ARRAY_SIZE * sizeof(int));
+  unsigned long long cycles1,cycles2;
+  asm volatile ("rdcycle %0" : "=r" (cycles1));
+
+  int *arr = malloc(ARRAY_SIZE * sizeof(int));
 	int val = 1;
 	for (size_t i = 0; i < ARRAY_SIZE; i++) {
 		arr[i] = val;
@@ -192,5 +195,8 @@ int main()
 	}
 	qsort(arr, ARRAY_SIZE, sizeof(int), compare);
 	printf("%u\n", arr[ARRAY_SIZE-1]);
+        asm volatile ("rdcycle %0" : "=r" (cycles2));
+        printf("iruntime %lu\r\n",cycles2-cycles1);
+
 	return 0;
 }

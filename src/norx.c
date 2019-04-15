@@ -469,11 +469,15 @@ int cf_norx32_decrypt(const uint8_t key[static 16],
 
 int main()
 {
+
+  uintptr_t cycles1,cycles2;
+  asm volatile ("rdcycle %0" : "=r" (cycles1));
+
   static const uint8_t key[16] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
   static const uint8_t nonce[8] = { 0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7 };
   static const size_t DATA_SIZE = 32 * 1024 * 1024;
   uint8_t tag[16];
-  
+
   uint8_t *pt1 = malloc(DATA_SIZE);
   uint8_t *ct = malloc(DATA_SIZE);
   uint8_t *pt2 = malloc(DATA_SIZE);
@@ -498,5 +502,9 @@ int main()
   free(pt1);
   free(ct);
   free(pt2);
+
+  asm volatile ("rdcycle %0" : "=r" (cycles2));
+  printf("iruntime %lu\r\n",cycles2-cycles1);
+
   return 0;
 }

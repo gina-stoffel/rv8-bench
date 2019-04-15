@@ -134,7 +134,7 @@ struct Nat
 	void set_bit(size_t n);
 
 
-	/* 
+	/*
 	 * add, subtract, shifts and logical operators
 	 */
 
@@ -349,8 +349,8 @@ void Nat::set_bit(size_t n)
 }
 
 
-/* 
- * multiply and divide require add with carry, subtract  
+/*
+ * multiply and divide require add with carry, subtract
  * with borrow, left and right shift logical operators
  */
 
@@ -926,8 +926,15 @@ void Nat::from_string(const char *str, size_t len, size_t radix)
 
 int main(int argc, char const *argv[])
 {
+    uintptr_t cycles1,cycles2;
+  asm volatile ("rdcycle %0" : "=r" (cycles1));
+
 	int val = 23, power = 111121;
 	Nat result = Nat(val).pow(power);
 	printf("%d ^ %d has %d digits\n", val, power, result.to_string().size());
 	assert(result.limb_at(0) == 2367549335);
+
+        asm volatile ("rdcycle %0" : "=r" (cycles2));
+        printf("iruntime %lu\r\n",cycles2-cycles1);
+
 }
