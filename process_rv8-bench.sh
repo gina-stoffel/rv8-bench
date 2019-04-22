@@ -14,15 +14,20 @@ for tst in riscv64/*; do
         KEYSTONE_LOG_FILE=${TEST_LOG_DIR}/keystone_${tst}_${RUN_N}.log
 
         if [[ $RUN_BASELINE == 1 ]]; then
-            cat ${BASE_LOG_FILE} | grep "real" | cut -d' ' -f '2' >> ${TEST_LOG_FILE}
-            cat ${BASE_LOG_FILE} | grep "iruntime" | cut -d' ' -f '2' >> ${TEST_LOG_FILE}
+            Breal=$(cat ${BASE_LOG_FILE} | grep "real" | cut -d$'\t' -f '2')
+            Binter=$(cat ${BASE_LOG_FILE} | grep "iruntime" | cut -d' ' -f 2)
+            printf "%s %s\n" "$Breal" "$Binter">> ${TEST_LOG_FILE}
         fi
 
         if [[ $RUN_KEYSTONE == 1 ]]; then
-            cat ${KEYSTONE_LOG_FILE} | grep "real" | cut -d' ' -f '2' >> ${KTEST_LOG_FILE}
-            cat ${KEYSTONE_LOG_FILE} | grep "Init" >> ${KTEST_LOG_FILE}
-            cat ${KEYSTONE_LOG_FILE} | grep "iruntime" >> ${KTEST_LOG_FILE}
-            cat ${KEYSTONE_LOG_FILE} | grep "Runtime" >> ${KTEST_LOG_FILE}
+            # Grab anything useful
+            Kreal=$(cat ${KEYSTONE_LOG_FILE} | grep "real" | cut -d$'\t' -f '2')
+            Kinit=$(cat ${KEYSTONE_LOG_FILE} | grep "Init" | cut -d' ' -f 3)
+            Kinter=$(cat ${KEYSTONE_LOG_FILE} | grep "iruntime" | cut -d' ' -f 2)
+            Krun=$(cat ${KEYSTONE_LOG_FILE} | grep "Runtime" | cut -d ' ' -f 3)
+
+            # Print only what we want
+            printf "%s %s\n" "$Kreal" "$Kinter" >> ${KTEST_LOG_FILE}
         fi
     done;
 
