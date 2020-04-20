@@ -20,7 +20,7 @@ for tst in riscv64/*; do
         fi
 
         if [[ $RUN_KEYSTONE == 1 ]]; then
-            { time ${TEST_RUNNER} ./riscv64/${tst} ${EYRIE_FULL_SUPPORT} ${DEFAULT_USZ} ${XLARGE_FSZ} 1 0; } &> ${KEYSTONE_LOG_FILE}
+            { time ${TEST_RUNNER} ./riscv64/${tst} ${EYRIE_FULL_SUPPORT} --utm-size ${DEFAULT_USZ} --freemem-size ${XLARGE_FSZ} --time ; } &> ${KEYSTONE_LOG_FILE}
         fi
     done
 done

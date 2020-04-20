@@ -23,13 +23,11 @@ ARM64_PROGS = $(addprefix bin/aarch64/, $(PROGRAMS))
 
 ALL_PROGS = $(RV64_PROGS)
 #$(RV32_PROGS) $(RV64_PROGS) $(I386_PROGS) $(X86_64_PROGS) $(ARM32_PROGS) $(ARM64_PROGS)
-O3_PROGS = $(addsuffix .O3, $(ALL_PROGS)) $(addsuffix .O3.stripped, $(ALL_PROGS))
-O2_PROGS = $(addsuffix .O2, $(ALL_PROGS)) $(addsuffix .O2.stripped, $(ALL_PROGS))
-OS_PROGS = $(addsuffix .Os, $(ALL_PROGS)) $(addsuffix .Os.stripped, $(ALL_PROGS))
+O3_PROGS = $(addsuffix .O3, $(ALL_PROGS))
+O2_PROGS = $(addsuffix .O2, $(ALL_PROGS))
+OS_PROGS = $(addsuffix .Os, $(ALL_PROGS))
 
-all: $(O3_PROGS) $(O2_PROGS) $(OS_PROGS) | npm
-
-npm: ; npm install
+all: $(O3_PROGS) $(OS_PROGS)
 
 clean: ; rm -fr bin
 
