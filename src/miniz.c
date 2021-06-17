@@ -112,7 +112,7 @@
 */
 
 
-/* Defines to completely disable specific portions of miniz.c: 
+/* Defines to completely disable specific portions of miniz.c:
    If all macros here are defined the only functionality remaining will be CRC-32, adler-32, tinfl, and tdefl. */
 
 /* Define MINIZ_NO_STDIO to disable all usage and any functions which rely on stdio for file I/O. */
@@ -135,7 +135,7 @@
 /* Define MINIZ_NO_ZLIB_COMPATIBLE_NAME to disable zlib names, to prevent conflicts against stock zlib. */
 /*#define MINIZ_NO_ZLIB_COMPATIBLE_NAMES */
 
-/* Define MINIZ_NO_MALLOC to disable all calls to malloc, free, and realloc. 
+/* Define MINIZ_NO_MALLOC to disable all calls to malloc, free, and realloc.
    Note if MINIZ_NO_MALLOC is defined then the user must always provide custom user alloc/free/realloc
    callbacks to the zlib and archive API's, and a few stand-alone helper API's which don't provide custom user
    functions (such as tdefl_compress_mem_to_heap() and tinfl_decompress_mem_to_heap()) won't work. */
@@ -8444,6 +8444,9 @@ static const size_t DATA_SIZE = 8 * 1024 * 1024;
 
 int main()
 {
+    uintptr_t cycles1,cycles2;
+  asm volatile ("rdcycle %0" : "=r" (cycles1));
+
     uInt step = 0;
     int cmp_status;
     uLong src_len = DATA_SIZE;
@@ -8529,5 +8532,9 @@ int main()
     step++;
 
     printf("Success.\n");
+
+        asm volatile ("rdcycle %0" : "=r" (cycles2));
+        printf("iruntime %lu\r\n",cycles2-cycles1);
+
     return EXIT_SUCCESS;
 }
